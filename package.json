@@ -25,15 +25,13 @@
         "@microsoft/teams.graph-endpoints": "^2.0.0",
         "async-mutex": "^0.5.0",
         "react": "^19.0.0",
-        "react-dom": "^19.0.0",
-        "uuid": "^14.0.0"
+        "react-dom": "^19.0.0"
     },
     "devDependencies": {
         "@types/express": "^5.0.6",
         "@types/node": "^22.5.4",
         "@types/react": "^19.1.12",
         "@types/react-dom": "^19.1.9",
-        "@types/uuid": "^10.0.0",
         "@vitejs/plugin-react": "^4.3.4",
         "dotenv": "^16.4.5",
         "env-cmd": "^11.0.0",
