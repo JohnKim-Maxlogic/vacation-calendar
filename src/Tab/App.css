@@ -283,6 +283,39 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.color-picker-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.color-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.1s, border-color 0.1s;
+}
+
+.color-swatch:hover:not(:disabled) {
+  transform: scale(1.15);
+}
+
+.color-swatch.selected {
+  border-color: #333;
+  transform: scale(1.15);
+}
+
 /* ── Tab Config page ────────────────────────── */
 
 .tab-config {

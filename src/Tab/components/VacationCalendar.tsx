@@ -34,9 +34,9 @@ export default function VacationCalendar({ currentUser }: Props) {
   const [form, setForm] = useState<FormState | null>(null);
 
   const leaveLabel: Record<string, string> = {
-    연차: "",
-    반차오전: " (오전)",
-    반차오후: " (오후)",
+    연차: " (연차)",
+    반차오전: " (반차오전)",
+    반차오후: " (반차오후)",
   };
 
   const events = vacations.map((v) => ({

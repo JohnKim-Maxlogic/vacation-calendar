@@ -33,6 +33,7 @@ export default function VacationForm({
     editEntry?.leaveType ?? "연차"
   );
   const [note, setNote] = React.useState(editEntry?.note ?? "");
+  const [color, setColor] = React.useState(editEntry?.color ?? userColor(currentUser.userId));
   const [submitting, setSubmitting] = React.useState(false);
   const [error, setError] = React.useState("");
   const [confirmDelete, setConfirmDelete] = React.useState(false);
@@ -77,6 +78,7 @@ export default function VacationForm({
           endDate: finalEnd,
           leaveType,
           note: note || undefined,
+          color,
         });
       } else {
         await onSave({
@@ -86,7 +88,7 @@ export default function VacationForm({
           endDate: finalEnd,
           leaveType,
           note: note || undefined,
-          color: userColor(currentUser.userId),
+          color,
         });
       }
       onClose();
@@ -198,6 +200,20 @@ export default function VacationForm({
             onChange={(e) => setNote(e.target.value)}
           />
         </label>
+
+        <div className="color-picker-label">색상</div>
+        <div className="color-picker">
+          {COLORS.map((c) => (
+            <button
+              key={c}
+              type="button"
+              className={`color-swatch${color === c ? " selected" : ""}`}
+              style={{ backgroundColor: c }}
+              disabled={!isOwner}
+              onClick={() => setColor(c)}
+            />
+          ))}
+        </div>
 
         {!isOwner && (
           <p className="readonly-notice">
