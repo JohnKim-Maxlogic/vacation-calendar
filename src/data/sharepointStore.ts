@@ -1,23 +1,25 @@
-import { ClientSecretCredential } from "@azure/identity";
 import { VacationEntry } from "../types";
 
-let _credential: ClientSecretCredential | null = null;
-
-function getCredential(): ClientSecretCredential {
-  if (!_credential) {
-    _credential = new ClientSecretCredential(
-      process.env.TENANT_ID!,
-      process.env.CLIENT_ID!,
-      process.env.CLIENT_SECRET!
-    );
-  }
-  return _credential;
-}
-
 async function getToken(): Promise<string> {
-  const token = await getCredential().getToken("https://graph.microsoft.com/.default");
-  if (!token) throw new Error("Graph API 토큰 발급 실패");
-  return token.token;
+  const url = `https://login.microsoftonline.com/${process.env.TENANT_ID}/oauth2/v2.0/token`;
+  const params = new URLSearchParams({
+    client_id: process.env.CLIENT_ID!,
+    client_secret: process.env.CLIENT_SECRET!,
+    scope: "https://graph.microsoft.com/.default",
+    grant_type: "client_credentials",
+  });
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: params.toString(),
+  });
+  if (!res.ok) {
+    const body = await res.text();
+    console.error("[getToken] failed:", res.status, body);
+    throw new Error(`토큰 발급 실패: ${res.status} ${body}`);
+  }
+  const data = await res.json() as { access_token: string };
+  return data.access_token;
 }
 
 async function graphRequest(
@@ -58,10 +60,14 @@ function rowToEntry(item: Record<string, unknown>): VacationEntry {
 }
 
 export async function getAllVacations(): Promise<VacationEntry[]> {
-  const res = await graphRequest(
-    `${listBaseUrl()}/items?$expand=fields&$select=id,fields&$top=999`
-  );
-  if (!res.ok) throw new Error(`SharePoint 조회 실패: ${res.status} ${await res.text()}`);
+  const url = `${listBaseUrl()}/items?$expand=fields&$select=id,fields&$top=999`;
+  console.log("[sharepointStore.getAllVacations] url:", url);
+  const res = await graphRequest(url);
+  if (!res.ok) {
+    const body = await res.text();
+    console.error("[sharepointStore.getAllVacations]", res.status, body);
+    throw new Error(`SharePoint 조회 실패: ${res.status} ${body}`);
+  }
   const data = await res.json() as { value: Record<string, unknown>[] };
   return data.value.map(rowToEntry);
 }
