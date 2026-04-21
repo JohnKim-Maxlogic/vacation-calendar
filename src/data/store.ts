@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { randomUUID } from "crypto";
 import { Mutex } from "async-mutex";
 import { VacationEntry } from "../types";
 
@@ -35,7 +36,7 @@ export async function addVacation(
 ): Promise<VacationEntry> {
   return mutex.runExclusive(async () => {
     const entries = await readAll();
-    const newEntry: VacationEntry = { id: crypto.randomUUID(), ...entry };
+    const newEntry: VacationEntry = { id: randomUUID(), ...entry };
     entries.push(newEntry);
     await writeAll(entries);
     return newEntry;
