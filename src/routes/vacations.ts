@@ -16,6 +16,7 @@ router.get("/vacations", async (_req, res) => {
     const entries = await getAllVacations();
     res.json(entries);
   } catch (err) {
+    console.error("[GET /vacations]", err);
     res.status(500).json({ error: String(err) });
   }
 });
@@ -30,6 +31,7 @@ router.post("/vacations", async (req, res) => {
     const entry = await addVacation({ userId, userDisplayName, startDate, endDate, leaveType, note, color });
     res.status(201).json(entry);
   } catch (err) {
+    console.error("[POST /vacations]", err);
     res.status(500).json({ error: String(err) });
   }
 });
@@ -41,6 +43,7 @@ router.put("/vacations/:id", async (req, res) => {
     const updated = await updateVacation(id, patch);
     res.json(updated);
   } catch (err) {
+    console.error("[PUT /vacations]", err);
     res.status(404).json({ error: String(err) });
   }
 });
@@ -51,6 +54,7 @@ router.delete("/vacations/:id", async (req, res) => {
     await deleteVacation(id);
     res.status(204).send();
   } catch (err) {
+    console.error("[DELETE /vacations]", err);
     res.status(404).json({ error: String(err) });
   }
 });
