@@ -17,4 +17,4 @@ node_modules/
 dist/
 
 # local data file (use SharePoint in production)
-data/
+/data/
