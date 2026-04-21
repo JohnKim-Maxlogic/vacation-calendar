@@ -2,10 +2,9 @@ import { Router } from "express";
 import * as jsonStore from "../data/store";
 import * as spStore from "../data/sharepointStore";
 
-const store =
-  process.env.TENANT_ID && process.env.CLIENT_ID && process.env.CLIENT_SECRET
-    ? spStore
-    : jsonStore;
+const useSharePoint = !!(process.env.TENANT_ID && process.env.CLIENT_ID && process.env.CLIENT_SECRET);
+console.log(`[store] Using ${useSharePoint ? "SharePoint" : "JSON file"} store`);
+const store = useSharePoint ? spStore : jsonStore;
 
 const { getAllVacations, addVacation, updateVacation, deleteVacation } = store;
 

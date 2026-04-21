@@ -81,7 +81,11 @@ export async function addVacation(
       Color: entry.color,
     },
   });
-  if (!res.ok) throw new Error(`SharePoint 생성 실패: ${res.status} ${await res.text()}`);
+  if (!res.ok) {
+    const body = await res.text();
+    console.error("[sharepointStore.addVacation]", res.status, body);
+    throw new Error(`SharePoint 생성 실패: ${res.status} ${body}`);
+  }
   const item = await res.json() as { id: string };
   return { id: String(item.id), ...entry };
 }
