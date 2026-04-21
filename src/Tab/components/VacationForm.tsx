@@ -35,6 +35,7 @@ export default function VacationForm({
   const [note, setNote] = React.useState(editEntry?.note ?? "");
   const [submitting, setSubmitting] = React.useState(false);
   const [error, setError] = React.useState("");
+  const [confirmDelete, setConfirmDelete] = React.useState(false);
 
   const isOwner = !editEntry || editEntry.userId === currentUser.userId;
   const isHalfDay = leaveType === "반차오전" || leaveType === "반차오후";
@@ -97,7 +98,8 @@ export default function VacationForm({
   };
 
   const handleDelete = async () => {
-    if (!editEntry || !window.confirm("이 항목을 삭제하시겠습니까?")) return;
+    if (!editEntry) return;
+    if (!confirmDelete) { setConfirmDelete(true); return; }
     setSubmitting(true);
     try {
       await onDelete(editEntry.id);
@@ -203,21 +205,35 @@ export default function VacationForm({
           </p>
         )}
 
-        <div className="form-actions">
-          {isOwner && editEntry && (
-            <button className="btn-danger" onClick={handleDelete} disabled={submitting}>
-              삭제
+        {confirmDelete ? (
+          <div className="delete-confirm">
+            <p>정말 삭제하시겠습니까?</p>
+            <div className="form-actions">
+              <button className="btn-danger" onClick={handleDelete} disabled={submitting}>
+                {submitting ? "삭제 중..." : "삭제 확인"}
+              </button>
+              <button className="btn-secondary" onClick={() => setConfirmDelete(false)} disabled={submitting}>
+                취소
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="form-actions">
+            {isOwner && editEntry && (
+              <button className="btn-danger" onClick={handleDelete} disabled={submitting}>
+                삭제
+              </button>
+            )}
+            <button className="btn-secondary" onClick={onClose} disabled={submitting}>
+              취소
             </button>
-          )}
-          <button className="btn-secondary" onClick={onClose} disabled={submitting}>
-            취소
-          </button>
-          {isOwner && (
-            <button className="btn-primary" onClick={handleSave} disabled={submitting}>
-              {submitting ? "저장 중..." : "저장"}
-            </button>
-          )}
-        </div>
+            {isOwner && (
+              <button className="btn-primary" onClick={handleSave} disabled={submitting}>
+                {submitting ? "저장 중..." : "저장"}
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </dialog>
   );
