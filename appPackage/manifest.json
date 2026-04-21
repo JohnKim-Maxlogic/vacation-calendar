@@ -1,7 +1,7 @@
 {
     "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.26/MicrosoftTeams.schema.json",
     "manifestVersion": "1.26",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "id": "${{TEAMS_APP_ID}}",
     "developer": {
         "name": "My App, Inc.",
@@ -38,7 +38,7 @@
     "staticTabs": [
         {
             "entityId": "index0",
-            "name": "Home",
+            "name": "휴가 캘린더",
             "contentUrl": "${{TAB_ENDPOINT}}/tabs/home",
             "websiteUrl": "${{TAB_ENDPOINT}}/tabs/home",
             "scopes": [
